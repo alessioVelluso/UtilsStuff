@@ -1,0 +1,2 @@
+[30/06/2024 19:00:47]		  LOG:  Hello there
+[30/06/2024 19:00:47]		ERROR:  An Error
