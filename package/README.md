@@ -69,10 +69,10 @@ You can find an example in the `test3/utils.ts` file in this repo.
 The constructor of GenericUtils follows this interface:
 ```ts
 constructor(data?:LoggerConstructor)
-interface LoggerConstructor { logFilePath?:string, debug?:boolean }
+interface LoggerConstructor { logFilePath?:string, debug?:boolean, locale?: DateLocales }
 ```
 
-While the logFilePath is required only if you have to write log files somewhere in prod, the debug flag is by default set to true and will avoid any logging in console if set to false *(for the log methods of this class)*.
+While the logFilePath is required only if you have to write log files somewhere in prod, the debug flag is by default set to true and will avoid any logging in console if set to false *(for the log methods of this class)*. The locale flag refers to the date parsing.
 
 The related methods are really simple and can be easily read in the realted `/package/src/GenericUtils.ts` file in this repo.
 
