@@ -1,6 +1,5 @@
-import {  ClientFilters } from "utils-stuff"
+import {  ClientFilters, CatchedResponse, ClientFilter } from "utils-stuff"
 import gu from "./utils";
-import { CatchedResponse, ClientFilter } from "../package/types/generic.types";
 
 
 gu.log("Hello there, this is a log" + " " + gu.parseDate(), "blue");

@@ -12,12 +12,12 @@ This is a package i made for myself but can surely be helpful to others, feel fr
 ## Install:
 
 ```bash
-npm  install  utils-stuff
+npm install utils-stuff
 ```
 
 
 
-You can import two different classes, `GenericUtils` as default & `ClientFilters` .
+You can import two different classes, `GenericUtils` & `ClientFilters` (and all the types).
 
 **GenericUtils** has some generic utils and a logger that better format the logs (with color too if you want).
 **ClientFilters** can help a client to trace filters parameter with the url, as the object storing the values is directly binded to the params/url string and whenever you edit a value, it automatically updates the url too.
@@ -62,7 +62,7 @@ interface IClientFilters<T extends ClientFilter> {
 ## Initialize the class
 
 ```ts
-import { GenericUtils , ClientFilters} from  "word-file-utils"
+import { GenericUtils , ClientFilters} from "word-file-utils"
 ```
 **GenericUtils:** I suggest you to create a generic utils class extending mine if you want a solid way to store all your utils functions or whatever.
 You can find an example in the `test3/utils.ts` file in this repo.
