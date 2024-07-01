@@ -1,6 +1,6 @@
 {
   "name": "utils-stuff",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "author": "Alessio Velluso",
   "license": "MIT",
   "description": "Generic utils, both for server or client uses",

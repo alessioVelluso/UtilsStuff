@@ -2,22 +2,31 @@
 
 
 
-`v1.1.1`
+`v2.0.0`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
+> [!WARNING]
+> This lightest package between my 3 utils libraries.
+> If you need excel js install[fast-js-excel](https://github.com/alessioVelluso/FastExcel) or take a look at [word-file-utils](https://github.com/alessioVelluso/WordFileUtils) if you need some file utilities without the use of exceljs library.
+> **DO NOT INSTALL ALL THREE LIBS CAUSE ONE IS THE "PARENT" OF THE OTHER:**
+> 1. `utils-stuff`
+> 2. `word-file-utils` (including utils-stuff)
+> 3. `fast-js-excel` (including exceljs, word-file-utils (including utils-stuff))
+>
+>So if you install word-file utils you can use the classes of utils-stuff and so on, choose the one for your pourpose.
 
 
 
 ## Install:
 
 ```bash
-npm install utils-stuff
+npm  install  utils-stuff
 ```
 
 
 
-You can import two different classes, `GenericUtils` & `ClientFilters` (and all the types).
+You can import two different classes, `GenericUtils` as default & `ClientFilters` .
 
 **GenericUtils** has some generic utils and a logger that better format the logs (with color too if you want).
 **ClientFilters** can help a client to trace filters parameter with the url, as the object storing the values is directly binded to the params/url string and whenever you edit a value, it automatically updates the url too.
@@ -29,7 +38,7 @@ You can import two different classes, `GenericUtils` & `ClientFilters` (and all 
 At the moment, the interface of the class is as it follows:
 
 ```ts
-interface IGenericUtils {
+interface  IGenericUtils {
 	parseDate: (date?:string) => string
 	catchRes: <T>(isOk:false, response:T | null, error?:string | null) => CatchedResponse<T>
 	catchResError:(err:any) => CatchedResponse<any>
@@ -44,7 +53,7 @@ interface IGenericUtils {
 
 
 
-interface IClientFilters<T extends ClientFilter> {
+export  interface  IClientFilters<T  extends  ClientFilter> {
 	values:T
 	currentParams:string;
 	currentHref:string;
@@ -62,17 +71,17 @@ interface IClientFilters<T extends ClientFilter> {
 ## Initialize the class
 
 ```ts
-import { GenericUtils , ClientFilters} from "word-file-utils"
+import { GenericUtils , ClientFilters} from  "word-file-utils"
 ```
 **GenericUtils:** I suggest you to create a generic utils class extending mine if you want a solid way to store all your utils functions or whatever.
 You can find an example in the `test3/utils.ts` file in this repo.
 The constructor of GenericUtils follows this interface:
 ```ts
 constructor(data?:LoggerConstructor)
-interface LoggerConstructor { logFilePath?:string, debug?:boolean, locale?: DateLocales }
+interface LoggerConstructor { logFilePath?:string, debug?:boolean }
 ```
 
-While the logFilePath is required only if you have to write log files somewhere in prod, the debug flag is by default set to true and will avoid any logging in console if set to false *(for the log methods of this class)*. The locale flag refers to the date parsing.
+While the logFilePath is required only if you have to write log files somewhere in prod, the debug flag is by default set to true and will avoid any logging in console if set to false *(for the log methods of this class)*.
 
 The related methods are really simple and can be easily read in the realted `/package/src/GenericUtils.ts` file in this repo.
 
