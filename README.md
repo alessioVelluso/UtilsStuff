@@ -2,7 +2,7 @@
 
 
 
-`v1.1.1`
+`v1.1.2`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
