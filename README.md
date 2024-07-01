@@ -21,7 +21,7 @@ This is a package i made for myself but can surely be helpful to others, feel fr
 ## Install:
 
 ```bash
-npm  install  utils-stuff
+npm install utils-stuff
 ```
 
 
@@ -38,7 +38,7 @@ You can import two different classes, `GenericUtils` as default & `ClientFilters
 At the moment, the interface of the class is as it follows:
 
 ```ts
-interface  IGenericUtils {
+interface IGenericUtils {
 	parseDate: (date?:string) => string
 	catchRes: <T>(isOk:false, response:T | null, error?:string | null) => CatchedResponse<T>
 	catchResError:(err:any) => CatchedResponse<any>
@@ -53,7 +53,7 @@ interface  IGenericUtils {
 
 
 
-export  interface  IClientFilters<T  extends  ClientFilter> {
+interface IClientFilters<T extends ClientFilter> {
 	values:T
 	currentParams:string;
 	currentHref:string;
@@ -96,7 +96,7 @@ interface AnotherFilter extends ClientFilter { startDate:Date, endDate:Date, nam
 
 To create a ClientFilters object consider this code:
 ```ts
-const  filter = new  ClientFilters<ExampleFilter>({
+const filter = new ClientFilters<ExampleFilter>({
 	startDate: new Date(),
 	endDate: new Date(),
 	type: 2,
