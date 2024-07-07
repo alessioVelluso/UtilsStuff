@@ -9,6 +9,7 @@ export interface IGenericUtils {
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => { removed:T[], added:T[] };
+    isNumeric: (str:string) => boolean;
 }
 
 
@@ -18,6 +19,9 @@ export default class GenericUtils extends Logger implements IGenericUtils
     constructor(data?:LoggerConstructor) {
         super(data);
     }
+
+    public readonly isNumericRegex:RegExp = /^-?\d+(\.\d+)?$/
+
 
     parseDate = (date?:string):string => {
         const dateObj = !date ? new Date() : new Date(date);
@@ -56,4 +60,8 @@ export default class GenericUtils extends Logger implements IGenericUtils
 
         return { removed, added }
     }
+
+    isNumeric = (str:string):boolean => {
+		return this.isNumericRegex.test(str);
+	}
 }

@@ -4,6 +4,7 @@ import { DateLocales } from "../types/locales.types";
 
 export interface ILogger {
     log: (message:any, color?:LogColors) => void;
+    logDetail: (message:any) => void;
     logFile: (message:string, type?:"log" | "error", isClosing?:boolean) => void;
     logError: (err:any) => string | any;
 }
@@ -20,7 +21,7 @@ export default class Logger implements ILogger
     private readonly isDebug:boolean = true;
     private readonly dateObj = new Date();
     private readonly fileStream:WriteStream = null!;
-    protected readonly colors = {
+    public readonly colors = {
         red: "\x1b[31m%s\x1b[0m",
         green: "\x1b[32m%s\x1b[0m",
         yellow: "\x1b[33m%s\x1b[0m",
@@ -55,6 +56,13 @@ export default class Logger implements ILogger
             if (typeof message === "string") console.log(this.colors[color], `${dateString}${message}`);
             else console.log(this.colors[color], dateString, message);
         }
+    }
+
+    logDetail = (message:any) => {
+        if (!this.isDebug) return;
+
+        if (typeof message === "object") console.log(this.colors["gray"], JSON.stringify(message, null, 2));
+        else console.log(this.colors["gray"], `${message}`);
     }
 
     logError = (err:any):string | any => {

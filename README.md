@@ -1,12 +1,12 @@
 ﻿# Utils Stuff
 
+  
 
-
-`v2.0.1`
+`v2.0.2`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
-> [!WARNING]
+> [!WARNING]  
 > This lightest package between my 3 utils libraries.
 > If you need excel js install[fast-js-excel](https://github.com/alessioVelluso/FastExcel) or take a look at [word-file-utils](https://github.com/alessioVelluso/WordFileUtils) if you need some file utilities without the use of exceljs library.
 > **DO NOT INSTALL ALL THREE LIBS CAUSE ONE IS THE "PARENT" OF THE OTHER:**
@@ -15,8 +15,8 @@ This is a package i made for myself but can surely be helpful to others, feel fr
 > 3. `fast-js-excel` (including exceljs, word-file-utils (including utils-stuff))
 >
 >So if you install word-file utils you can use the classes of utils-stuff and so on, choose the one for your pourpose.
-
-
+  
+  
 
 ## Install:
 
@@ -24,16 +24,14 @@ This is a package i made for myself but can surely be helpful to others, feel fr
 npm install utils-stuff
 ```
 
-
-
 You can import two different classes, `GenericUtils` as default & `ClientFilters` .
 
 **GenericUtils** has some generic utils and a logger that better format the logs (with color too if you want).
 **ClientFilters** can help a client to trace filters parameter with the url, as the object storing the values is directly binded to the params/url string and whenever you edit a value, it automatically updates the url too.
 
-
-
-
+  
+  
+  
 
 At the moment, the interface of the class is as it follows:
 
@@ -45,14 +43,16 @@ interface IGenericUtils {
 	isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
 	isStringValid: (str?:string) => boolean
 	arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => { removed:T[], added:T[] };
+	isNumeric: (str:string) => boolean;
 
 	log: (message:any, color?:LogColors) => void;
+	logDetail: (message:any) => void;
 	logFile: (message:string, type?:"log" | "error", isClosing?:boolean) => void;
 	logError: (err:any) => string | any;
 }
 
-
-
+  
+  
 interface IClientFilters<T extends ClientFilter> {
 	values:T
 	currentParams:string;
@@ -65,13 +65,13 @@ interface IClientFilters<T extends ClientFilter> {
 }
 ```
 
-
-
+  
+  
 
 ## Initialize the class
 
 ```ts
-import { GenericUtils , ClientFilters} from  "word-file-utils"
+import { GenericUtils , ClientFilters} from "word-file-utils"
 ```
 **GenericUtils:** I suggest you to create a generic utils class extending mine if you want a solid way to store all your utils functions or whatever.
 You can find an example in the `test3/utils.ts` file in this repo.
@@ -83,8 +83,35 @@ interface LoggerConstructor { logFilePath?:string, debug?:boolean }
 
 While the logFilePath is required only if you have to write log files somewhere in prod, the debug flag is by default set to true and will avoid any logging in console if set to false *(for the log methods of this class)*.
 
-The related methods are really simple and can be easily read in the realted `/package/src/GenericUtils.ts` file in this repo.
+```ts
+import { GenericUtils } from "utils-stuff";
 
+// Create a class extending mine if you want to store other utils
+class MyGenericUtils extends GenericUtils {
+	myCustomMethod = (name:string):string => {
+		return `Hello ${name}`
+	}
+}
+const mgu = new MyGenericUtils(/*{ debug: env.DEBUG }*/)
+
+
+// Or simply export mine directly
+const gu = new GenericUtils(/*{ debug: env.DEBUG }*/)
+```
+
+Export it however you want but i raccomand you to init a single object and use it through all the project.
+```ts
+export default new GenericUtils(/*{ debug: env.DEBUG }*/)
+
+// Or destruct the single functions
+const gu = new GenericUtils(/*{ debug: env.DEBUG }*/)
+const { log, logDetails, logError } = gu;
+export { log, logDetails, logError }
+```
+
+The related methods are really simple and can be easily read in the realted `/package/src/GenericUtils.ts` file in this repo.
+The only method not-so-easy to read is the `isNumeric` RegExp wich will return true if the passed string is any int, float, double or negative number.
+  
 
 **ClientFilters**: For the ClientFilters class i reccomand you to initialize a new object every file that requires it.
 
@@ -96,7 +123,7 @@ interface AnotherFilter extends ClientFilter { startDate:Date, endDate:Date, nam
 
 To create a ClientFilters object consider this code:
 ```ts
-const filter = new ClientFilters<ExampleFilter>({
+const  filter = new ClientFilters<ExampleFilter>({
 	startDate: new Date(),
 	endDate: new Date(),
 	type: 2,
@@ -107,7 +134,7 @@ In this case we will have a `filter` object having:
 2. `.currentParams`: a string rapresenting the current values parsed as a param string (`?value1=1&value2=true`)
 3. `.currentHref`: if the object is initialized in a client, this will be set as the related window.location.href value, else null.
 4. `.currentWholeUrl`: if the currentHref is not null, this prop will hold the combination of currentHref and currentParams, else it will be null.
-
+  
 
 
 

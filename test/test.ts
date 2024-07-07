@@ -28,3 +28,9 @@ gu.log(filter.currentParams, "cyan");
 filter.values.active = undefined;
 filter.values.startDate = new Date("5/30/2024 15:00")
 gu.log(filter.currentParams, "cyan");
+
+
+gu.log("Just a test", "cyan");
+gu.logDetail({ test: 1, test2: true, prova: { test3: [ "Hello", 2, false] } });
+gu.logDetail(false);
+gu.logDetail(12.3)
