@@ -2,7 +2,7 @@
 
 
 
-`v2.0.0`
+`v2.0.1`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
@@ -21,7 +21,7 @@ This is a package i made for myself but can surely be helpful to others, feel fr
 ## Install:
 
 ```bash
-npm  install  utils-stuff
+npm install utils-stuff
 ```
 
 

@@ -46,7 +46,7 @@ export default class Logger implements ILogger
     }
 
 
-    log(message:any, color:LogColors = null) {
+    log = (message:any, color:LogColors = null) => {
         if (!this.isDebug) return;
 
         const dateString = `[${this.dateObj.toLocaleDateString(this.dateLocale, this.dateOptions)} ${this.dateObj.toLocaleTimeString(this.dateLocale, this.timeOptions)}]   `
@@ -57,7 +57,7 @@ export default class Logger implements ILogger
         }
     }
 
-    logError(err:any):string | any {
+    logError = (err:any):string | any => {
         if (!this.isDebug) return err;
 
         let errorMessage:string = null!;
@@ -78,7 +78,7 @@ export default class Logger implements ILogger
         }
     }
 
-    logFile(message:string, type:"log" | "error" = "log", isClosing:boolean = true) {
+    logFile = (message:string, type:"log" | "error" = "log", isClosing:boolean = true) => {
         if (!this.fileStream) return this.log("LOGFILE: Specify filepath destination in class constructor or function parameter", "red");
 
         const date = `[${this.dateObj.toLocaleDateString(this.dateLocale, this.dateOptions)} ${this.dateObj.toLocaleTimeString(this.dateLocale, this.timeOptions)}]`
