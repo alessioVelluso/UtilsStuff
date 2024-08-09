@@ -35,8 +35,8 @@ export default class GenericUtils extends Logger implements IGenericUtils
 
 
     catchResError = (err:any):CatchedResponse<any> => {
-        err = this.logError(err)
-        return { isOk: false, response:null, error:err }
+        this.logError(err)
+        return { isOk: false, response:null, error:err.message ? err.message : err }
     }
 
 
