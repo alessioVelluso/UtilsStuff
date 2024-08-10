@@ -3,7 +3,7 @@ import { DateLocales } from "./locales.types"
 // --- Generic Utils
 export interface GenericObject { [Key:string]: GenericType }
 
-export type GenericType = string | number | boolean | Date | Array<unknown> | object
+export type GenericType = string | number | boolean | Date | Array<unknown> | object | undefined | null
 
 export interface CatchedResponse<T> { isOk:boolean, response: T | null, error?:string | null }
 
