@@ -1,6 +1,6 @@
 {
   "name": "utils-stuff",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "author": "Alessio Velluso",
   "license": "MIT",
   "description": "Generic utils, both for server or client uses",
@@ -26,10 +26,9 @@
     "build": "tsup"
   },
   "keywords": [
-    "log",
-    "filters",
+    "frontend",
+    "backend",
     "client",
-    "color",
     "utils",
     "utilities"
   ]

@@ -10,7 +10,4 @@ class MyGenericUtils extends GenericUtils {
     }
 }
 
-export default new MyGenericUtils({
-    debug:true,
-    logFilePath: "../files/logs.txt"
-});
+export default new MyGenericUtils({ locale:"it-IT" });

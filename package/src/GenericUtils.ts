@@ -1,26 +1,30 @@
-import { CatchedResponse, GenericType, LoggerConstructor } from "../types/generic.types";
-import Logger from "./Logger";
+import { CatchedResponse, GenericType, DateLocales, ArrayDifference, GenericUtilsConstructor } from "../types/generic.types";
 
 
 export interface IGenericUtils {
     parseDate: (date?:string) => string
-    catchRes: <T>(isOk:false, response:T | null, error?:string | null) => CatchedResponse<T>
-    catchResError:(err:any) => CatchedResponse<any>
+    resOk: <T>(response:T) => CatchedResponse<T>
+    resError:(err:any) => CatchedResponse<any>
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
     isStringValid: (str?:string) => boolean;
-    arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => { removed:T[], added:T[] };
+    arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;
     isNumeric: (str:string) => boolean;
 }
 
 
 
-export default class GenericUtils extends Logger implements IGenericUtils
+export default class GenericUtils implements IGenericUtils
 {
-    constructor(data?:LoggerConstructor) {
-        super(data);
+    protected readonly dateOptions: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    protected readonly timeOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }
+
+    protected readonly dateLocale:DateLocales = "en-US";
+    protected readonly isNumericRegex:RegExp = /^-?\d+(\.\d+)?$/
+    constructor(constructor?:GenericUtilsConstructor) {
+        this.dateLocale = constructor?.locale ?? this.dateLocale
+        this.isNumericRegex = constructor?.numericValidation ?? this.isNumericRegex
     }
 
-    public readonly isNumericRegex:RegExp = /^-?\d+(\.\d+)?$/
 
 
     parseDate = (date?:string):string => {
@@ -29,13 +33,12 @@ export default class GenericUtils extends Logger implements IGenericUtils
     };
 
 
-    catchRes = <T = null>(isOk: boolean, response: T | null, error: string | null = null): CatchedResponse<T> => {
-        return { isOk, response, error }
+    resOk = <T>(response: T): CatchedResponse<T> => {
+        return { isOk:true, response, error:null }
     };
 
 
-    catchResError = (err:any):CatchedResponse<any> => {
-        this.logError(err)
+    resError = (err:any):CatchedResponse<any> => {
         return { isOk: false, response:null, error:err.message ? err.message : err }
     }
 
@@ -54,11 +57,17 @@ export default class GenericUtils extends Logger implements IGenericUtils
     }
 
 
-    arrayDiff = <T = string | number>(originalArray:T[], currentArray:T[]):{ removed:T[], added:T[] } => {
+    arrayDiff = <T = string | number>(originalArray:T[], currentArray:T[]):ArrayDifference<T> => {
+        const added:T[] = [];
+        const same:T[] = [];
         const removed = originalArray.filter(x => !currentArray.includes(x));
-        const added = currentArray.filter(x => !originalArray.includes(x));
 
-        return { removed, added }
+        for (const item of originalArray) {
+            if (currentArray.includes(item)) same.push(item);
+            else added.push(item);
+        }
+
+        return { removed, added, same }
     }
 
     isNumeric = (str:string):boolean => {

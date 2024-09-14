@@ -1,41 +1,31 @@
-import {  ClientFilters, CatchedResponse, ClientFilter } from "utils-stuff"
+import {  CatchedResponse } from "utils-stuff"
 import gu from "./utils";
 
+const dateNow = gu.parseDate();
+const isStrValid = gu.isStringValid("");
+const arrayDifference = gu.arrayDiff([0,1,5], [3,5,6])
+const isNumericTrue = gu.isNumeric("143.56");
+const isNumericFalse = gu.isNumeric("12,3");
+const isNumericFalse2 = gu.isNumeric("Not a number");
+const isNumericFalse3 = gu.isNumeric("-13");
 
-// --- Logger
-
-gu.log("Hello there, this is a log" + " " + gu.parseDate(), "blue");
-gu.logFile("Hello there", "log", false);
-gu.logFile("An Error", "error");
-
-
-const functionResult = (function testCatch():CatchedResponse<boolean> {
-    try { throw new Error("Test"); }
-    catch(err) { return gu.catchResError(err); }
-})()
-gu.logColor("Test Catch", functionResult);
-
-gu.logColor("Another test", { test: 1, test2: true, prova: { test3: [ "Hello", 2, false] } }, false, 12.3);
-gu.logError("An incredible error", functionResult)
-
-
+const testCatchGood = (function testCatchGood():CatchedResponse<string> {
+    try { return gu.resOk("Response string"); }
+    catch(err) { return gu.resError(err); }
+})();
+const testCatchResponse = (function testCatch():CatchedResponse<boolean> {
+    try { throw new Error("Error Message"); }
+    catch(err) { return gu.resError(err); }
+})();
 
 
+console.log(dateNow)
+console.log(isStrValid)
+console.log(arrayDifference)
+console.log(isNumericTrue)
+console.log(isNumericFalse)
+console.log(isNumericFalse2)
+console.log(isNumericFalse3)
 
-
-// --- Filter
-
-interface ExampleFilter extends ClientFilter { startDate:Date, endDate:Date, type:number, active?:boolean }
-const filter = new ClientFilters<ExampleFilter>({
-    startDate: new Date(),
-    endDate: new Date(),
-    type: 2,
-});
-
-filter.values.active = true;
-gu.logColor(filter.currentParams);
-
-
-filter.values.active = undefined;
-filter.values.startDate = new Date("5/30/2024 15:00")
-gu.logColor(filter.currentParams);
+console.log(testCatchGood);
+console.log(testCatchResponse);
