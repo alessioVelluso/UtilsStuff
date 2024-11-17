@@ -1,35 +1,35 @@
-import { CatchedResponse, GenericType, DateLocales, ArrayDifference, GenericUtilsConstructor } from "../types/generic.types";
+import { ArrayDifference, CatchedResponse, GenericType, GenericUtilsConstructor } from "../types/generic.types";
+import { Dater } from "./Dater";
 
 
 export interface IGenericUtils {
-    parseDate: (date?:string) => string
+    date: (date?:string, format?:string) => string
     resOk: <T>(response:T) => CatchedResponse<T>
     resError:(err:any) => CatchedResponse<any>
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;
     isNumeric: (str:string) => boolean;
+    capitalize: (str:string) => string;
 }
 
 
 
-export default class GenericUtils implements IGenericUtils
+export default class GenericUtils extends Dater implements IGenericUtils
 {
-    protected readonly dateOptions: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    protected readonly timeOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }
-
-    protected readonly dateLocale:DateLocales = "en-US";
+    protected readonly defaultDateFormat:string = "YYYY-MM-DD hh:mm:ss";
     protected readonly isNumericRegex:RegExp = /^-?\d+(\.\d+)?$/
     constructor(constructor?:GenericUtilsConstructor) {
-        this.dateLocale = constructor?.locale ?? this.dateLocale
+        super(constructor?.locale);
         this.isNumericRegex = constructor?.numericValidation ?? this.isNumericRegex
+        this.defaultDateFormat = constructor?.defaultDateFormat ?? this.defaultDateFormat
     }
 
 
 
-    parseDate = (date?:string):string => {
+    date = (date?:string | number | Date | null, format:string = this.defaultDateFormat):string => {
         const dateObj = !date ? new Date() : new Date(date);
-        return `${dateObj.toLocaleDateString(this.dateLocale, this.dateOptions)} ${dateObj.toLocaleTimeString(this.dateLocale, this.timeOptions)}`;
+        return this.formatDate(dateObj, format);
     };
 
 

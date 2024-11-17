@@ -1,3 +1,5 @@
+import { DateLocales } from "./dater.types"
+
 // --- Generic Utils
 export interface GenericObject { [Key:string]: GenericType }
 
@@ -15,17 +17,6 @@ export type ArrayDifference<T> = { removed:T[], added:T[], same:T[] }
 
 export interface GenericUtilsConstructor {
     locale?:DateLocales,
-    numericValidation?:RegExp
+    numericValidation?:RegExp,
+    defaultDateFormat?:string
 }
-
-
-// --- Locales
-export type DateLocales =
-    | "en-US"
-    | "en-GB"
-    | "fr-FR"
-    | "de-DE"
-    | "it-IT"
-    | "es-ES"
-    | "ja-JP"
-    | "zh-CN";

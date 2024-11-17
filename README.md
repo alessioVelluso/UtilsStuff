@@ -2,7 +2,7 @@
 
 
 
-`v3.0.0`
+`v4.0.0`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
@@ -11,7 +11,7 @@ This is a package i made for myself but can surely be helpful to others, feel fr
 > If you need excel js install[fast-js-excel](https://github.com/alessioVelluso/FastExcel) or take a look at [word-file-utils](https://github.com/alessioVelluso/WordFileUtils) if you need some file utilities without the use of exceljs library.
 > **DO NOT INSTALL ALL THREE LIBS CAUSE ONE IS THE "PARENT" OF THE OTHER:**
 > 1. `utils-stuff`
-> 2. `utils-logger` (including utils-stuff)
+> 2. `utils-logger-av` (including utils-stuff)
 > 3. `word-file-utils` (including utils-logger)
 > 4. `fast-js-excel` (including exceljs, word-file-utils (including utils-stuff))
 >
@@ -38,13 +38,14 @@ At the moment, the interface of the class is as it follows:
 
 ```ts
 export interface IGenericUtils {
-    parseDate: (date?:string) => string
+    date: (date?:string, format?:string) => string
     resOk: <T>(response:T) => CatchedResponse<T>
     resError:(err:any) => CatchedResponse<any>
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;
     isNumeric: (str:string) => boolean;
+    capitalize: (str:string) => string;
 }
 ```
 
@@ -54,10 +55,9 @@ export interface IGenericUtils {
 ## Initialize the class
 
 ```ts
-import { GenericUtils } from "word-file-utils"
+import { GenericUtils } from "utils-stuff"
 ```
-**GenericUtils:** I suggest you to create a generic utils class extending mine if you want a solid way to store all your utils functions or whatever.
-You can find an example in the `test3/utils.ts` file in this repo.
+
 The constructor of GenericUtils follows this interface:
 ```ts
 protected readonly dateLocale:DateLocales = "en-US";
@@ -65,12 +65,12 @@ protected readonly isNumericRegex:RegExp = /^-?\d+(\.\d+)?$/
 constructor(constructor?:GenericUtilsConstructor)
 export interface GenericUtilsConstructor {
     locale?:DateLocales,
-    numericValidation?:RegExp
+    numericValidation?:RegExp,
+    defaultDateFormat?:string // for date parsing, default is "YYYY-MM-DD hh:mm:ss"
 }
 ```
 
-While the logFilePath is required only if you have to write log files somewhere in prod, the debug flag is by default set to true and will avoid any logging in console if set to false *(for the log methods of this class)*.
-
+I suggest you to create a generic utils class extending mine if you want a solid way to store all your utils functions or whatever.
 ```ts
 import { GenericUtils } from "utils-stuff";
 
@@ -92,10 +92,48 @@ Export it however you want but i raccomand you to init a single object and use i
 export default new GenericUtils(/*{ locale: "it-IT" }*/)
 
 // Or destruct the single functions
-const gu = new GenericUtils(/*{ debug: env.DEBUG }*/)
-const { resOk, resError, isStringValid } = gu;
+const { resOk, resError, isStringValid } = new GenericUtils();
 export { resOk, resError, isStringValid }
 ```
 
+## Methods
+
 The related methods are really simple and can be easily read in the realted `/package/src/GenericUtils.ts` file in this repo.
-The only method not-so-easy to read is the `isNumeric` RegExp wich will return true if the passed string is any int, float, double or negative number.
+The only methods not-so-easy to read are the `date` method and the `isNumeric` RegExp wich will return true if the passed string is any int, float, double or negative number. You can override the default regex in the constructor.
+
+### `date: (date?:string|number|Date|null, format?:string) => string`
+
+This method takes a string or number that you would normally pass to a `Date()` constructor and an additional string param that let you format the date object into the string you want.
+
+```ts
+export type FormatUnit =
+    | "YYYY"      // Year 4 digits (1996)
+    | "YYY"       // Year 3 digits (996)
+    | "YY"        // Year 2 digits (96)
+    | "M"         // Month of year (1-12)
+    | "MM"        // Month of year (01-12)
+    | "MMM"       // Month of year (May) (set locale option)
+    | "D"         // Day of month  (1-31)
+    | "DD"        // Day of month  (01-31)
+    | "DDD"       // Day of month  (Monday-Sunday) (set locale option)
+    | "H"         // Hour of day   (0-23:59)
+    | "HH"        // Hour of day   (00-23:59)
+    | "h"         // Hour of day   (0-11:59)
+    | "hh"        // Hour of day   (00-11:59)
+    | "tt"        // AM or PM      (AM - PM)
+    | "m"         // Minute        (0-59)
+    | "mm"        // Minute        (00-59)
+    | "s"         // Second        (0-59)
+    | "ss"        // Second        (00-59)
+    | "f"         // Milliseconds  (0000-999)
+```
+```ts
+// --- Null or undefined is gonna be the current time
+gu.date()
+gu.date(null, "DDD DD, MMM YYYY")
+gu.date(null, "hh:mm:ss:f")
+gu.date(null, "MMM DD h.tt")
+gu.date(1221732346340, "YYYY-MM-DD HH:mm:ss")
+gu.date(new Date("2023/01/01"), "DD/MM/YY h:mm tt")
+gu.date('2023-11-12T19:37:14.157Z', "DDD DD-MM-YYYY, h:mm tt")
+```

@@ -1,6 +1,6 @@
 {
   "name": "utils-stuff",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "author": "Alessio Velluso",
   "license": "MIT",
   "description": "Generic utils, both for server or client uses",
@@ -30,6 +30,8 @@
     "backend",
     "client",
     "utils",
-    "utilities"
+    "utilities",
+    "date",
+    "parse"
   ]
 }
