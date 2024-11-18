@@ -4,6 +4,7 @@ const gu = new GenericUtils({ locale: 'it-IT' })
 // --- Dates
 console.log(gu.date())
 console.log(gu.date(null, "DDD DD, MMM YYYY"))
+console.log(gu.date(null, "DDD DD, MMM YYYY", "ru-RU"))
 console.log(gu.date(null, "hh:mm:ss:f"))
 console.log(gu.date(null, "MMM DD h.tt"))
 console.log(gu.date(1221732346340, "YYYY-MM-DD HH:mm:ss"))

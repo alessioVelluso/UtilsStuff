@@ -2,7 +2,7 @@
 
 
 
-`v4.1.0`
+`v4.2.0`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
@@ -27,7 +27,7 @@ npm install utils-stuff
 
 You can import two different classes, `GenericUtils` as default & `ClientFilters` .
 
-**GenericUtils** has some generic utils and a logger that better format the logs (with color too if you want).
+**GenericUtils** has some generic utils and a logger that better format the logs (with color too if you want).\
 **ClientFilters** can help a client to trace filters parameter with the url, as the object storing the values is directly binded to the params/url string and whenever you edit a value, it automatically updates the url too.
 
 
@@ -38,7 +38,7 @@ At the moment, the interface of the class is as it follows:
 
 ```ts
 export interface IGenericUtils {
-    date: (date?:string, format?:string) => string
+    date: (date?:string, format?:string, locale?:DateLocales) => string
     resOk: <T>(response:T) => CatchedResponse<T>
     resError:(err:any) => CatchedResponse<any>
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
@@ -99,12 +99,16 @@ export { resOk, resError, isStringValid }
 
 ## Methods
 
-The related methods are really simple and can be easily read in the realted `/package/src/GenericUtils.ts` file in this repo.
+The related methods are really simple and can be easily read in the realted `/package/src/GenericUtils.ts` file in this repo.\
 The only methods not-so-easy to read are the `date` method and the `isNumeric` RegExp wich will return true if the passed string is any int, float, double or negative number. You can override the default regex in the constructor.
 
-### `date: (date?:string|number|Date|null, format?:string) => string`
+### `date: (date?:string|number|Date|null, format?:string, locale?:DateLocales) => string`
 
-This method takes a string or number that you would normally pass to a `Date()` constructor and an additional string param that let you format the date object into the string you want.
+This method takes a string or number that you would normally pass to a `Date()` constructor and an additional string param that let you format the date object into the string you want.\
+If no locale parameter is passed, it will be used the one specified in the constructor of the class `GenericUtils({ locale:"..." })`.\
+If no locale is passed in the class constructor it will be used `"en-US"`
+> See the related locale options in `./package/types/dater.types.ts`
+
 
 ```ts
 export type FormatUnit =
@@ -132,6 +136,7 @@ export type FormatUnit =
 // --- Null or undefined is gonna be the current time
 gu.date()
 gu.date(null, "DDD DD, MMM YYYY")
+gu.date(null, "DDD DD, MMM YYYY", "ru-RU")
 gu.date(null, "hh:mm:ss:f")
 gu.date(null, "MMM DD h.tt")
 gu.date(1221732346340, "YYYY-MM-DD HH:mm:ss")

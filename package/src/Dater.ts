@@ -12,8 +12,10 @@ export class Dater
         else return str.split(" ").map(x => x.charAt(0).toUpperCase() + x.slice(1)).join(" ");
     }
 
-    protected formatDate = (date:Date, format:string) => format.replace(/YYYY|YYY|YY|MMM|MM|M|DDD|DD|D|HH|H|hh|h|mm|m|ss|s|f|tt/g, match => this.mapFormatUnit(date, match as FormatUnit));
-    private mapFormatUnit = (date:Date, key:FormatUnit):string=>
+    protected formatDate = (date:Date, format:string, locale?:DateLocales) => {
+        return format.replace(/YYYY|YYY|YY|MMM|MM|M|DDD|DD|D|HH|H|hh|h|mm|m|ss|s|f|tt/g, match => this.mapFormatUnit(date, match as FormatUnit, locale));
+    }
+    private mapFormatUnit = (date:Date, key:FormatUnit, locale?:DateLocales):string=>
     {
         switch(key)
         {
@@ -22,10 +24,10 @@ export class Dater
             case "YY": return date.getFullYear().toString().slice(-2);
             case "M": return (date.getMonth() + 1).toString();
             case "MM": return (date.getMonth() + 1).toString().padStart(2, '0');
-            case "MMM": return this.capitalize(date.toLocaleString(this.dateLocale, { month: 'long' }));
+            case "MMM": return this.capitalize(date.toLocaleString(locale ?? this.dateLocale, { month: 'long' }));
             case "D": return date.getDate().toString();
             case "DD": return date.getDate().toString().padStart(2, '0');
-            case "DDD": return this.capitalize(date.toLocaleString(this.dateLocale, { weekday: 'long' }));
+            case "DDD": return this.capitalize(date.toLocaleString(locale ?? this.dateLocale, { weekday: 'long' }));
             case "H": return date.getHours().toString();
             case "HH": return date.getHours().toString().padStart(2, '0');
             case "h": return ((date.getHours() >= 12) ? date.getHours()-12 : date.getHours()).toString();

@@ -1,9 +1,10 @@
+import { DateLocales } from "../types/dater.types";
 import { ArrayDifference, CatchedResponse, GenericType, GenericUtilsConstructor } from "../types/generic.types";
 import { Dater } from "./Dater";
 
 
 export interface IGenericUtils {
-    date: (date?:string, format?:string) => string
+    date: (date?:string, format?:string, locale?:DateLocales) => string
     resOk: <T>(response:T) => CatchedResponse<T>
     resError:(err:any) => CatchedResponse<any>
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
@@ -33,9 +34,9 @@ export default class GenericUtils extends Dater implements IGenericUtils
     }
 
 
-    date = (date?:string | number | Date | null, format:string = this.defaultDateFormat):string => {
+    date = (date?:string | number | Date | null, format?:string, locale?:DateLocales):string => {
         const dateObj = !date ? new Date() : new Date(date);
-        return this.formatDate(dateObj, format);
+        return this.formatDate(dateObj, format ?? this.defaultDateFormat, locale);
     };
 
 
