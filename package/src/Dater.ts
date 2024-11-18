@@ -2,11 +2,15 @@ import { DateLocales, FormatUnit } from "../types/dater.types";
 
 export class Dater
 {
-    public readonly dateLocale:DateLocales;
+    protected readonly dateLocale:DateLocales;
     constructor (locale?:DateLocales) { this.dateLocale = locale ?? "en-US"; }
 
 
-    public capitalize = (str:string) => (!str) ? "" : str.charAt(0).toUpperCase() + str.slice(1);
+    public capitalize = (str:string, all:boolean = false):string => {
+        if (!str) return "";
+        else if (!all) return str.charAt(0).toUpperCase() + str.slice(1);
+        else return str.split(" ").map(x => x.charAt(0).toUpperCase() + x.slice(1)).join(" ");
+    }
 
     protected formatDate = (date:Date, format:string) => format.replace(/YYYY|YYY|YY|MMM|MM|M|DDD|DD|D|HH|H|hh|h|mm|m|ss|s|f|tt/g, match => this.mapFormatUnit(date, match as FormatUnit));
     private mapFormatUnit = (date:Date, key:FormatUnit):string=>

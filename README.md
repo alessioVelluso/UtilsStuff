@@ -2,7 +2,7 @@
 
 
 
-`v4.0.0`
+`v4.1.0`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
@@ -45,7 +45,8 @@ export interface IGenericUtils {
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;
     isNumeric: (str:string) => boolean;
-    capitalize: (str:string) => string;
+    capitalize: (str:string, all?:boolean) => string;
+    fromLetterToNumber: (char:string) => number;
 }
 ```
 

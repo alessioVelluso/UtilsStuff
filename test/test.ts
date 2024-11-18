@@ -29,3 +29,8 @@ console.log("Test Catch Error", (() => {
     try { throw new Error("Error Message"); }
     catch(err) { return gu.resError(err); }
 })())
+console.log("")
+
+console.log("Capitalize:", gu.capitalize("this is a text"))
+console.log("Capitalize2:", gu.capitalize("every word capitalized", true))
+console.log("From letter to number:", gu.fromLetterToNumber("l"))

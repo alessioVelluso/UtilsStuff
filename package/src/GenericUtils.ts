@@ -10,7 +10,8 @@ export interface IGenericUtils {
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;
     isNumeric: (str:string) => boolean;
-    capitalize: (str:string) => string;
+    capitalize: (str:string, all?:boolean) => string;
+    fromLetterToNumber: (char:string) => number;
 }
 
 
@@ -25,6 +26,11 @@ export default class GenericUtils extends Dater implements IGenericUtils
         this.defaultDateFormat = constructor?.defaultDateFormat ?? this.defaultDateFormat
     }
 
+
+
+    fromLetterToNumber = (char:string) => {
+        return char.toUpperCase().charCodeAt(0) - 64;
+    }
 
 
     date = (date?:string | number | Date | null, format:string = this.defaultDateFormat):string => {
