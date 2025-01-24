@@ -18,6 +18,8 @@ export interface IGenericUtils {
     flattenObject: (obj:Record<string, any>) => Record<string, any>;
     sortObjects: <T = any>(arr:Array<Record<string, T>>, key:string | number) => Array<Record<string, T>>;
     keepTrying: <T = void>(finalError:string, methods: Array<() => Promise<T>>) => Promise<T>;
+    sleep: (ms:number) => Promise<void>
+    random: <T = any>(arr:Array<T>) => T
 }
 
 
@@ -148,5 +150,16 @@ export default class GenericUtils extends Dater implements IGenericUtils
         }
 
         throw new Error(finalError);
+    }
+
+    sleep = async (ms:number):Promise<void> =>
+    {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    }
+
+    random = <T>(arr:Array<T>) =>
+    {
+        if (arr.length === 0) return null!;
+        return arr[Math.floor(Math.random() * arr.length)];
     }
 }

@@ -2,7 +2,7 @@
 
 
 
-`v4.3.0`
+`v4.4.0`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
@@ -52,6 +52,8 @@ export interface IGenericUtils {
     flattenObject: (obj:Record<string, any>) => Record<string, any>;
     sortObjects: <T = any>(arr:Array<Record<string, T>>, key:string | number) => Array<Record<string, T>>;
     keepTrying: <T = void>(finalError:string, methods: Array<() => Promise<T>>) => Promise<T>;
+    sleep: (ms:number) => Promise<void>
+    random: <T = any>(arr:Array<T>) => T
 }
 ```
 
