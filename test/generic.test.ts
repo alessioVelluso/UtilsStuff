@@ -1,4 +1,6 @@
 import { GenericUtils } from 'utils-stuff';
+import "./filter.test";
+
 const gu = new GenericUtils({ locale: 'it-IT' })
 
 // --- Dates

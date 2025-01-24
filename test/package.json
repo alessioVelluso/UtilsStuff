@@ -6,7 +6,7 @@
   "types": "./types/node-google-translate-skidz.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node test"
+    "dev": "ts-node generic.test"
   },
   "keywords": [],
   "author": "",

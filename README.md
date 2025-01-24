@@ -2,7 +2,7 @@
 
 
 
-`v4.2.0`
+`v4.3.0`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
@@ -47,6 +47,11 @@ export interface IGenericUtils {
     isNumeric: (str:string) => boolean;
     capitalize: (str:string, all?:boolean) => string;
     fromLetterToNumber: (char:string) => number;
+    isEmptyObject: (obj:Record<string, any>) => boolean;
+    getRandomColor: () => string;
+    flattenObject: (obj:Record<string, any>) => Record<string, any>;
+    sortObjects: <T = any>(arr:Array<Record<string, T>>, key:string | number) => Array<Record<string, T>>;
+    keepTrying: <T = void>(finalError:string, methods: Array<() => Promise<T>>) => Promise<T>;
 }
 ```
 
@@ -142,4 +147,22 @@ gu.date(null, "MMM DD h.tt")
 gu.date(1221732346340, "YYYY-MM-DD HH:mm:ss")
 gu.date(new Date("2023/01/01"), "DD/MM/YY h:mm tt")
 gu.date('2023-11-12T19:37:14.157Z', "DDD DD-MM-YYYY, h:mm tt")
+```
+
+
+### `keepTrying: <T = void>(finalError:string, methods: Array<() => Promise<T>>) => Promise<T>;`
+
+This methods helps use assign a variable by trying/catching multiple functions that return the same value type (you can set two datatypes in | with typescript).
+It takes two parameters:
+1. **finalError**:
+> If everything will go wrong it'll throw an error with your string as a message.
+2. **methods**:
+> A list of methods that possibly (encouraged) return the same datatype.
+
+*This is a random example*
+```ts
+let compressedImageBytes = await keepTrying<Buffer>(`IMAGE == ${imagePath} == IS NOT JPG OR PNG`, [
+    async () => await sharp(imagePath).jpeg({ quality:this.jpgCompression }).toBuffer(),
+    async () => await sharp(imagePath).png({ compressionLevel: this.pngCompression }).toBuffer()
+]);
 ```
