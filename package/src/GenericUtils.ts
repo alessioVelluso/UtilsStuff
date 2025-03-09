@@ -7,6 +7,9 @@ export interface IGenericUtils {
     date: (date?:string, format?:string, locale?:DateLocales) => string
     resOk: <T>(response:T) => CatchedResponse<T>
     resError:(err:any) => CatchedResponse<any>
+    getErrorMessage: (err:any) => string;
+    catchReturn<T>(cb: () => Promise<T>): Promise<CatchedResponse<T>>;
+    catchReturn<T>(cb: () => T): CatchedResponse<T>;
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;
@@ -57,9 +60,29 @@ export default class GenericUtils extends Dater implements IGenericUtils
 
     resError = (err:any):CatchedResponse<any> =>
     {
-        return { isOk: false, response:null, error:err.message ? err.message : err }
+        return { isOk: false, response:null, error: this.getErrorMessage(err) }
     }
 
+    getErrorMessage = (err: any) =>
+    {
+        return err.message ? err.message : err;
+    }
+
+    catchReturn<T>(cb: () => Promise<T>): Promise<CatchedResponse<T>>;
+    catchReturn<T>(cb: () => T): CatchedResponse<T>;
+    catchReturn<T>(cb: () => T | Promise<T>): Promise<CatchedResponse<T>> | CatchedResponse<T>
+    {
+        try
+        {
+            const res = cb();
+            if (res instanceof Promise) return res.then(this.resOk).catch(this.resError);
+            else return this.resOk(res);
+        }
+        catch (err)
+        {
+            return this.resError(err);
+        }
+    }
 
     isAxiosOk = (res:{ status:number, [Key:string]: GenericType}):boolean =>
     {

@@ -2,7 +2,7 @@
 
 
 
-`v4.4.0`
+`v4.5.0`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
@@ -41,6 +41,9 @@ export interface IGenericUtils {
     date: (date?:string, format?:string, locale?:DateLocales) => string
     resOk: <T>(response:T) => CatchedResponse<T>
     resError:(err:any) => CatchedResponse<any>
+    getErrorMessage: (err:any) => string;
+    catchReturn<T>(cb: () => Promise<T>): Promise<CatchedResponse<T>>;
+    catchReturn<T>(cb: () => T): CatchedResponse<T>;
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;

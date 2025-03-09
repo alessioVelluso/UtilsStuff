@@ -24,16 +24,22 @@ console.log("Is Numeric False:", gu.isNumeric("12,3"));
 console.log("Is Numeric False2:", gu.isNumeric("Not a number"));
 console.log("");
 
-console.log("Test Catch Good", (() => {
-    try { return gu.resOk("Response string"); }
-    catch(err) { return gu.resError(err); }
-})())
-console.log("Test Catch Error", (() => {
-    try { throw new Error("Error Message"); }
-    catch(err) { return gu.resError(err); }
-})())
-console.log("")
-
 console.log("Capitalize:", gu.capitalize("this is a text"))
 console.log("Capitalize2:", gu.capitalize("every word capitalized", true))
 console.log("From letter to number:", gu.fromLetterToNumber("l"))
+console.log("");
+
+console.log("Test Catch Good", (() => {
+    try { return gu.resOk("Response string"); }
+    catch(err) { return gu.resError(err); }
+})());
+console.log("Test Catch Error", (() => {
+    try { throw new Error("Error Message"); }
+    catch(err) { return gu.resError(err); }
+})());
+
+(async () => {
+    const err1 = gu.catchReturn<string>(() => { throw new Error("NOK"); })
+    const ok1 = await gu.catchReturn(async () => { return "OK"; });
+    console.log(`Test Catch Return: Error: ${JSON.stringify(err1)}, Ok: ${JSON.stringify(ok1)}`)
+})();
