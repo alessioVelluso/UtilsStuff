@@ -8,8 +8,8 @@ export interface IGenericUtils {
     resOk: <T>(response:T) => CatchedResponse<T>
     resError:(err:any) => CatchedResponse<any>
     getErrorMessage: (err:any) => string;
-    catchReturn<T>(cb: () => Promise<T>): Promise<CatchedResponse<T>>;
-    catchReturn<T>(cb: () => T): CatchedResponse<T>;
+    catchReturn<T>(cb: () => Promise<T>, errorCb?:() => void): Promise<CatchedResponse<T>>;
+    catchReturn<T>(cb: () => T, errorCb?:() => void): CatchedResponse<T>;
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;
@@ -23,6 +23,7 @@ export interface IGenericUtils {
     keepTrying: <T = void>(finalError:string, methods: Array<() => Promise<T>>) => Promise<T>;
     sleep: (ms:number) => Promise<void>
     random: <T = any>(arr:Array<T>) => T
+    fromStringToColor: (input:string, brightness:number) => string
 }
 
 
@@ -35,6 +36,8 @@ export default class GenericUtils extends Dater implements IGenericUtils
         super(constructor?.locale);
         this.isNumericRegex = constructor?.numericValidation ?? this.isNumericRegex
         this.defaultDateFormat = constructor?.defaultDateFormat ?? this.defaultDateFormat
+
+        this.catchReturn = this.catchReturn.bind(this)
     }
 
 
@@ -45,7 +48,43 @@ export default class GenericUtils extends Dater implements IGenericUtils
     }
 
 
-    date = (date?:string | number | Date | null, format?:string, locale?:DateLocales):string =>
+    /**
+     * ### Converts a string into a unique hex color (#RRGGBBAA).
+     *
+     * - Brightness: 0 (transparent) -> 10 (opaque).
+     * Default is 10.
+     */
+    fromStringToColor = (input:string, brightness:number = 10) =>
+    {
+        brightness = Math.min(10, Math.max(0, brightness));
+
+        // Crea un hash numerico
+        let hash = 0;
+        for (let i = 0; i < input.length; i++) hash = input.charCodeAt(i) + ((hash << 5) - hash);
+
+        // Estrai RGB dall'hash
+        const r = (hash >> 0) & 0xFF;
+        const g = (hash >> 8) & 0xFF;
+        const b = (hash >> 16) & 0xFF;
+
+        // Alpha basato su brightness (0 = trasparente, 10 = opaco)
+        const alpha = Math.round((brightness / 10) * 255);
+
+        // Helper per convertire a HEX
+        const toHex = (c: number) => c.toString(16).padStart(2, "0");
+
+        // Ritorna colore HEX 8 caratteri (#RRGGBBAA)
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}${toHex(alpha)}`;
+    }
+
+
+    /**
+     * ### Returns the stringed format of date.
+     * - The default format is the one specified in the constructor or the default "YYYY-MM-DD hh:mm:ss"
+     * - If no params are passed, you'll receive the date of the code execution
+     * - If you want to parse the "now" date but with a different format, **pass null in the first param**
+     */
+    date(date?:string | number | Date | null, format?:string, locale?:DateLocales):string
     {
         const dateObj = !date ? new Date() : new Date(date);
         return this.formatDate(dateObj, format ?? this.defaultDateFormat, locale);
@@ -68,9 +107,14 @@ export default class GenericUtils extends Dater implements IGenericUtils
         return err.message ? err.message : err;
     }
 
-    catchReturn<T>(cb: () => Promise<T>): Promise<CatchedResponse<T>>;
-    catchReturn<T>(cb: () => T): CatchedResponse<T>;
-    catchReturn<T>(cb: () => T | Promise<T>): Promise<CatchedResponse<T>> | CatchedResponse<T>
+    /**
+     * ### Wrap the code in a try catch with a CathedResponse return.
+     * - Typescript doesn't manage async / not async returns based of related async callback:
+     * - **BE SURE TO AWAIT THE RESPONSE IF THE CALLBACK IS ASYNC**
+     */
+    catchReturn<T>(cb: () => Promise<T>, errorCb?:() => void): Promise<CatchedResponse<T>>;
+    catchReturn<T>(cb: () => T, errorCb?:() => void): CatchedResponse<T>;
+    catchReturn<T>(cb: () => T | Promise<T>, errorCb?:() => void): Promise<CatchedResponse<T>> | CatchedResponse<T>
     {
         try
         {
@@ -80,6 +124,7 @@ export default class GenericUtils extends Dater implements IGenericUtils
         }
         catch (err)
         {
+            if (errorCb) errorCb();
             return this.resError(err);
         }
     }
@@ -160,9 +205,13 @@ export default class GenericUtils extends Dater implements IGenericUtils
         return flattened;
     };
 
-    sortObjects = <T = any>(arr: Array<Record<string, T>>, key: string | number) =>
+    sortObjects = <T = any>(arr: Array<Record<string, T>>, key: string | number, order: 'asc' | 'desc' = 'asc') =>
     {
-        return arr.sort((a:Record<string, any>, b:Record<string, any>) => (a[key] > b[key] ? 1 : -1));
+        return arr.sort((a:Record<string, any>, b:Record<string, any>) => {
+            if (a[key] > b[key]) return order === 'asc' ? 1 : -1;
+            else if (a[key] < b[key]) return order === 'asc' ? -1 : 1;
+            else return 0;
+        });
     };
 
     keepTrying = async <T = void>(finalError:string, methods: Array<() => Promise<T>>):Promise<T> =>

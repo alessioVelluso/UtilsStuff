@@ -37,6 +37,7 @@ console.log("Test Catch Error", (() => {
     try { throw new Error("Error Message"); }
     catch(err) { return gu.resError(err); }
 })());
+console.log("");
 
 (async () => {
     const err1 = gu.catchReturn<string>(() => { throw new Error("NOK"); })

@@ -2,20 +2,10 @@
 
 
 
-`v4.5.0`
+`v4.6.0`
 
 This is a package i made for myself but can surely be helpful to others, feel free to contribute if you like it.
 
-> [!WARNING]
-> This lightest package between my 3 utils libraries.
-> If you need excel js install[fast-js-excel](https://github.com/alessioVelluso/FastExcel) or take a look at [word-file-utils](https://github.com/alessioVelluso/WordFileUtils) if you need some file utilities without the use of exceljs library.
-> **DO NOT INSTALL ALL THREE LIBS CAUSE ONE IS THE "PARENT" OF THE OTHER:**
-> 1. `utils-stuff`
-> 2. `utils-logger-av` (including utils-stuff)
-> 3. `word-file-utils` (including utils-logger)
-> 4. `fast-js-excel` (including exceljs, word-file-utils (including utils-stuff))
->
->So if you install word-file utils you don't need to install utils-logger and so on, choose the one for your pourpose.
 
 
 
@@ -42,8 +32,8 @@ export interface IGenericUtils {
     resOk: <T>(response:T) => CatchedResponse<T>
     resError:(err:any) => CatchedResponse<any>
     getErrorMessage: (err:any) => string;
-    catchReturn<T>(cb: () => Promise<T>): Promise<CatchedResponse<T>>;
-    catchReturn<T>(cb: () => T): CatchedResponse<T>;
+    catchReturn<T>(cb: () => Promise<T>, errorCb?:() => void): Promise<CatchedResponse<T>>;
+    catchReturn<T>(cb: () => T, errorCb?:() => void): CatchedResponse<T>;
     isAxiosOk: (res:{ status:number, [Key:string]: GenericType} /* pass an AxiosResponse */) => boolean;
     isStringValid: (str?:string) => boolean;
     arrayDiff: <T = string | number>(originalArray:T[], currentArray:T[]) => ArrayDifference<T>;
@@ -57,6 +47,7 @@ export interface IGenericUtils {
     keepTrying: <T = void>(finalError:string, methods: Array<() => Promise<T>>) => Promise<T>;
     sleep: (ms:number) => Promise<void>
     random: <T = any>(arr:Array<T>) => T
+    fromStringToColor: (input:string, brightness:number) => string
 }
 ```
 
